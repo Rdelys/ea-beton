@@ -171,71 +171,73 @@ export default function ListeFabrication({ navigation }) {
       </View>
 
       {/* Tableau */}
-      <ScrollView horizontal>
-        <View style={styles.tableContainer}>
-          <View style={[styles.row, styles.tableHeader]}>
-            <Text style={styles.col}>CLIENT</Text>
-            <Text style={styles.col}>DATE FAB</Text>
-            <Text style={styles.col}>ARTICLE</Text>
-            <Text style={styles.col}>QTE COMMANDE</Text>
-            <Text style={styles.col}>MACHINE</Text>
-            <Text style={styles.col}>SITE</Text>
-            <Text style={styles.col}>QTE A FABRIQUER</Text>
-            <Text style={styles.col}>QTE PRODUITE</Text>
-            <Text style={styles.col}>STATUS</Text>
-            <Text style={styles.col}>Temps écoulé</Text>
-            <Text style={styles.col}>QTE RESTANTE</Text>
-            <Text style={styles.col}>CASSE</Text>
-          </View>
+      {/* Tableau */}
+<ScrollView horizontal contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}>
+  <View style={[styles.tableContainer, { minWidth: '100%' }]}>
+    <View style={[styles.row, styles.tableHeader]}>
+      <Text style={styles.col}>CLIENT</Text>
+      <Text style={styles.col}>DATE FAB</Text>
+      <Text style={styles.col}>ARTICLE</Text>
+      <Text style={styles.col}>QTE COMMANDE</Text>
+      <Text style={styles.col}>MACHINE</Text>
+      <Text style={styles.col}>SITE</Text>
+      <Text style={styles.col}>QTE A FABRIQUER</Text>
+      <Text style={styles.col}>QTE PRODUITE</Text>
+      <Text style={styles.col}>STATUS</Text>
+      <Text style={styles.col}>Temps écoulé</Text>
+      <Text style={styles.col}>QTE RESTANTE</Text>
+      <Text style={styles.col}>CASSE</Text>
+    </View>
 
-          <ScrollView style={{ maxHeight: 450 }}>
-            {data.map((item, index) => (
-              <View
-                key={item.id}
-                style={[
-                  styles.row,
-                  styles.tableRow,
-                  index % 2 === 0 && { backgroundColor: "#f9f9f9" },
-                ]}
-              >
-                <Text style={styles.col}>{item.client}</Text>
-                <TouchableOpacity
-                  style={[styles.col, styles.dateCell]}
-                  onPress={() => setShowDatePickerId(item.id)}
-                >
-                  <Text style={styles.dateText}>
-                    {item.dateFab ? item.dateFab.toLocaleDateString("fr-FR") : "Sélectionner date"}
-                  </Text>
-                  {showDatePickerId === item.id && (
-                    <DateTimePicker
-                      value={item.dateFab || new Date()}
-                      mode="date"
-                      display={Platform.OS === "ios" ? "spinner" : "default"}
-                      onChange={(event, selectedDate) =>
-                        handleDateChange(event, selectedDate, item.id)
-                      }
-                      minimumDate={new Date(2000, 0, 1)}
-                      maximumDate={new Date(2100, 11, 31)}
-                    />
-                  )}
-                </TouchableOpacity>
-                <Text style={styles.col}>{item.article}</Text>
-                <Text style={styles.col}>{item.qteCommande}</Text>
-                <Text style={styles.col}>{item.machine}</Text>
-                <Text style={styles.col}>{item.site}</Text>
-                <Text style={styles.col}>{item.qteAFabriquer}</Text>
-                <Text style={styles.col}>{item.qteProduite}</Text>
-                <View style={[styles.col, { backgroundColor: statusColor(item.status), borderRadius: 6 }]}>
-                  <Text style={{ color: "#fff", fontWeight: "bold", textAlign: "center" }}>{item.status}</Text>
-                </View>
-                <Text style={styles.col}>{new Date(item.tempsEcoule * 1000).toISOString().substr(11, 8)}</Text>
-                <Text style={styles.col}>{item.qteRestante}</Text>
-                <Text style={styles.col}>{item.casse}</Text>
-              </View>
-            ))}
-          </ScrollView>
+    <ScrollView style={{ maxHeight: 450 }}>
+      {data.map((item, index) => (
+        <View
+          key={item.id}
+          style={[
+            styles.row,
+            styles.tableRow,
+            index % 2 === 0 && { backgroundColor: "#f9f9f9" },
+          ]}
+        >
+          <Text style={styles.col}>{item.client}</Text>
+          <TouchableOpacity
+            style={[styles.col, styles.dateCell]}
+            onPress={() => setShowDatePickerId(item.id)}
+          >
+            <Text style={styles.dateText}>
+              {item.dateFab ? item.dateFab.toLocaleDateString("fr-FR") : "Sélectionner date"}
+            </Text>
+            {showDatePickerId === item.id && (
+              <DateTimePicker
+                value={item.dateFab || new Date()}
+                mode="date"
+                display={Platform.OS === "ios" ? "spinner" : "default"}
+                onChange={(event, selectedDate) =>
+                  handleDateChange(event, selectedDate, item.id)
+                }
+                minimumDate={new Date(2000, 0, 1)}
+                maximumDate={new Date(2100, 11, 31)}
+              />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.col}>{item.article}</Text>
+          <Text style={styles.col}>{item.qteCommande}</Text>
+          <Text style={styles.col}>{item.machine}</Text>
+          <Text style={styles.col}>{item.site}</Text>
+          <Text style={styles.col}>{item.qteAFabriquer}</Text>
+          <Text style={styles.col}>{item.qteProduite}</Text>
+          <View style={[styles.col, { backgroundColor: statusColor(item.status), borderRadius: 6 }]}>
+            <Text style={{ color: "#fff", fontWeight: "bold", textAlign: "center" }}>{item.status}</Text>
+          </View>
+          <Text style={styles.col}>{new Date(item.tempsEcoule * 1000).toISOString().substr(11, 8)}</Text>
+          <Text style={styles.col}>{item.qteRestante}</Text>
+          <Text style={styles.col}>{item.casse}</Text>
         </View>
-      </ScrollView>
+      ))}
+    </ScrollView>
+  </View>
+</ScrollView>
+
     </View>
   );
 }
