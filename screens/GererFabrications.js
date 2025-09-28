@@ -10,10 +10,12 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RNPickerSelect from "react-native-picker-select";
 
-export default function NouvelleFabrication({ navigation }) {
-  const [typeProduction, setTypeProduction] = useState("CLIENT");
+export default function GererFabrications({ navigation }) {
   const [client, setClient] = useState(null);
   const [commande, setCommande] = useState(null);
+  const [machineFilter, setMachineFilter] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [dateFilter, setDateFilter] = useState(null);
 
   const initialData = [
     {
@@ -115,32 +117,6 @@ export default function NouvelleFabrication({ navigation }) {
 
       {/* Filtres */}
       <View style={styles.filtres}>
-        <Text style={styles.label}>Type de production :</Text>
-        <View style={styles.rowBtnType}>
-          <TouchableOpacity
-            style={[
-              styles.btnType,
-              typeProduction === "CLIENT" ? styles.btnTypeActive : styles.btnTypeInactive,
-            ]}
-            onPress={() => setTypeProduction("CLIENT")}
-          >
-            <Text style={typeProduction === "CLIENT" ? styles.btnTextActive : styles.btnTextInactive}>
-              CLIENT
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.btnType,
-              typeProduction === "STOCK" ? styles.btnTypeActive : styles.btnTypeInactive,
-            ]}
-            onPress={() => setTypeProduction("STOCK")}
-          >
-            <Text style={typeProduction === "STOCK" ? styles.btnTextActive : styles.btnTextInactive}>
-              STOCK
-            </Text>
-          </TouchableOpacity>
-        </View>
-
         <Text style={styles.label}>Client :</Text>
         <View style={styles.inputWrapper}>
           <RNPickerSelect
@@ -167,6 +143,60 @@ export default function NouvelleFabrication({ navigation }) {
             style={pickerStyle}
             useNativeAndroidPickerStyle={false}
           />
+        </View>
+
+        <Text style={styles.label}>Machine :</Text>
+        <View style={styles.inputWrapper}>
+          <RNPickerSelect
+            onValueChange={setMachineFilter}
+            items={[
+              { label: "M1", value: "M1" },
+              { label: "M2", value: "M2" },
+            ]}
+            placeholder={{ label: "Sélectionner machine", value: null }}
+            style={pickerStyle}
+            useNativeAndroidPickerStyle={false}
+          />
+        </View>
+
+        <Text style={styles.label}>Statut :</Text>
+        <View style={styles.inputWrapper}>
+          <RNPickerSelect
+            onValueChange={setStatusFilter}
+            items={[
+              { label: "Nouveau", value: "Nouveau" },
+              { label: "En cours", value: "En cours" },
+              { label: "Planifié", value: "Planifié" },
+              { label: "Terminé", value: "Terminé" },
+            ]}
+            placeholder={{ label: "Sélectionner statut", value: null }}
+            style={pickerStyle}
+            useNativeAndroidPickerStyle={false}
+          />
+        </View>
+
+        <Text style={styles.label}>Date de fabrication :</Text>
+        <View style={styles.inputWrapper}>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker("filter")}
+          >
+            <Text style={styles.dateText}>
+              {dateFilter ? dateFilter.toLocaleDateString("fr-FR") : "Sélectionner date"}
+            </Text>
+          </TouchableOpacity>
+          {showDatePicker === "filter" && (
+            <DateTimePicker
+              value={dateFilter || new Date()}
+              mode="date"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={(event, date) => {
+                if (event.type !== "dismissed") setDateFilter(date);
+                setShowDatePicker(null);
+              }}
+              minimumDate={new Date(2000, 0, 1)}
+              maximumDate={new Date(2100, 11, 31)}
+            />
+          )}
         </View>
       </View>
 
@@ -306,25 +336,6 @@ export default function NouvelleFabrication({ navigation }) {
           </ScrollView>
         </View>
       </ScrollView>
-
-      {/* Boutons Enregistrer et Annuler */}
-      <View style={styles.footerButtons}>
-        <TouchableOpacity
-          style={[styles.footerBtnSmall, { backgroundColor: "#27ae60" }]}
-          onPress={() => {
-            console.log("Enregistrer :", data);
-            navigation.goBack();
-          }}
-        >
-          <Text style={styles.footerBtnTextSmall}>Enregistrer</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.footerBtnSmall, { backgroundColor: "#e74c3c" }]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.footerBtnTextSmall}>Annuler</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -338,13 +349,6 @@ const styles = StyleSheet.create({
   filtres: { marginBottom: 15, padding: 12, backgroundColor: "#fff", borderRadius: 12, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 3 },
   label: { fontWeight: "600", marginTop: 12, marginBottom: 6, fontSize: 14, color: "#333" },
 
-  rowBtnType: { flexDirection: "row", marginBottom: 10 },
-  btnType: { paddingVertical: 8, paddingHorizontal: 20, borderRadius: 25, marginRight: 12, borderWidth: 1 },
-  btnTypeActive: { backgroundColor: "#27ae60", borderColor: "#27ae60" },
-  btnTypeInactive: { backgroundColor: "#fff", borderColor: "#27ae60" },
-  btnTextActive: { color: "#fff", fontWeight: "bold", fontSize: 14 },
-  btnTextInactive: { color: "#27ae60", fontWeight: "bold", fontSize: 14 },
-
   inputWrapper: { borderWidth: 1, borderColor: "#dcdde1", borderRadius: 10, paddingHorizontal: 10, backgroundColor: "#f5f6fa", justifyContent: "center", height: 45, marginBottom: 10 },
 
   tableContainer: { borderRadius: 12, overflow: "hidden", backgroundColor: "#fff", paddingBottom: 10 },
@@ -356,10 +360,6 @@ const styles = StyleSheet.create({
   dateText: { color: "#2f3640", fontSize: 13 },
   actionBtn: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 6, marginVertical: 2 },
   actionText: { color: "#fff", fontWeight: "bold", fontSize: 12 },
-
-  footerButtons: { flexDirection: "row", justifyContent: "flex-end", marginTop: 15, paddingVertical: 5, backgroundColor: "#fff" },
-  footerBtnSmall: { marginHorizontal: 5, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 6, alignItems: "center" },
-  footerBtnTextSmall: { color: "#fff", fontWeight: "bold", fontSize: 12 },
 });
 
 const pickerStyle = {

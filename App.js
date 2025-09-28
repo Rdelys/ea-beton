@@ -7,6 +7,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import Accueil from './screens/Accueil';
 import NouvelleFabrication from './screens/NouvelleFabrication';
 import ListeFabrication from './screens/ListeFabrication';
+import GererFabrications from './screens/GererFabrications';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -37,6 +39,11 @@ export default function App() {
           name="ListeFabrication"
           component={ListeFabrication}
           options={{ title: 'Liste et status des fabrications' }}
+        />
+        <Stack.Screen
+          name="GererFabrications"
+          component={GererFabrications}
+          options={{ title: 'Gérer les fabrications' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

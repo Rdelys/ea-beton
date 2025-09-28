@@ -62,7 +62,7 @@ export default function Accueil({ navigation }) {
             description="Gérer les fabrications existantes" 
             iconName="cogs" 
             color="#f05627" 
-            onPress={() => alert("Gérer")} 
+            onPress={() => navigation.navigate('GererFabrications')} 
           />
         </View>
 
